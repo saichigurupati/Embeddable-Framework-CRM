@@ -1515,7 +1515,7 @@ body.sidebar-collapsed .main-content { margin-left: var(--sidebar-collapsed); }
   box-shadow: var(--shadow-md);
   display: flex;
   flex-direction: column;
-  min-height: 560px;
+  min-height: calc(100vh - var(--topbar-height) - 160px);
 }
 
 .softphone-tabs-row {
@@ -1581,23 +1581,6 @@ body.sidebar-collapsed .main-content { margin-left: var(--sidebar-collapsed); }
   word-break: break-word;
 }
 
-/* ── Connection chip (replaces the bare dot next to the card title) ── */
-.sp-connection-chip {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--text-secondary);
-  background: var(--bg);
-  padding: 5px 12px;
-  border-radius: 20px;
-  border: 1px solid var(--border);
-  flex-shrink: 0;
-}
-.sp-connection-chip .softphone-status-dot { box-shadow: 0 0 0 2px rgba(0,41,82,0.1); }
-.sp-connection-chip .softphone-status-dot.connected { box-shadow: 0 0 0 2px rgba(74,222,128,0.3); }
-
 .softphone-frame-header {
   display: flex;
   align-items: center;
@@ -1618,21 +1601,6 @@ body.sidebar-collapsed .main-content { margin-left: var(--sidebar-collapsed); }
 .softphone-frame-title svg {
   width: 18px; height: 18px;
   flex-shrink: 0;
-}
-
-.softphone-status-dot {
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  background: #9ca3af;
-  flex-shrink: 0;
-  transition: background 0.3s ease;
-  box-shadow: 0 0 0 2px rgba(255,255,255,0.2);
-}
-.softphone-status-dot.connected { background: #4ade80; box-shadow: 0 0 0 2px rgba(74,222,128,0.3); }
-
-@keyframes pulse-dot {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0.4; }
 }
 
 #softphone {
@@ -1788,7 +1756,7 @@ body.sidebar-collapsed .main-content { margin-left: var(--sidebar-collapsed); }
 @media (max-width: 1100px) {
   .softphone-layout { grid-template-columns: 1fr; }
   .genesys-config-grid { grid-template-columns: 1fr; }
-  .softphone-frame-card { min-height: 460px; }
+  .softphone-frame-card { min-height: calc(100vh - var(--topbar-height) - 160px); }
 }
 
 @media (max-width: 768px) {
@@ -2498,10 +2466,6 @@ body.sidebar-collapsed .main-content { margin-left: var(--sidebar-collapsed); }
           <div class="genesys-info-card">
             <div class="card-header">
               <h2 class="card-title">Genesys Cloud Softphone</h2>
-              <span class="sp-connection-chip" id="spConnectionChip">
-                <span id="spDot" class="softphone-status-dot"></span>
-                <span id="spDotLabel">Connecting…</span>
-              </span>
             </div>
             <iframe
               id="softphone"
@@ -3599,7 +3563,6 @@ function animateCounters() {
     iframeUrl: 'https://apps.usw2.pure.cloud/crm/embeddableFramework.html'
   };
 
-  var spDot       = document.getElementById('spDot');
   var spStatusText = document.getElementById('spStatusText');
   var spBanner     = document.getElementById('spStatusBanner');
   var iframe       = document.getElementById('softphone');
@@ -3614,13 +3577,6 @@ function animateCounters() {
     genesysState = state;
     bannerDismissed = false; // a real state change un-hides the banner
     renderBanner(msg);
-    if (spDot) spDot.className = 'softphone-status-dot ' + (state === 'connected' ? 'connected' : '');
-    var dotLabel = document.getElementById('spDotLabel');
-    if (dotLabel) {
-      dotLabel.textContent = state === 'connected' ? 'Connected'
-        : state === 'error' ? 'Needs login'
-        : 'Connecting…';
-    }
   }
 
   function renderBanner(msg) {
