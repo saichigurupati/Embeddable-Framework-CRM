@@ -105,6 +105,38 @@ a { text-decoration: none; color: inherit; }
   width: var(--sidebar-collapsed);
 }
 
+/* ── Fully hidden sidebar (desktop) — click to hide, click the
+   floating button to bring it back. Workspace gets the full width. ── */
+.sidebar.full-hidden {
+  width: 0;
+  box-shadow: none;
+}
+
+body.sidebar-full-hidden .main-content {
+  margin-left: 0;
+}
+
+.sidebar-show-btn {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 150;
+  width: 42px;
+  height: 42px;
+  background: var(--primary);
+  color: white;
+  border-radius: var(--radius-md);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-lg);
+  transition: background var(--transition), transform var(--transition);
+}
+.sidebar-show-btn:hover { background: var(--accent); transform: translateY(-1px); }
+.sidebar-show-btn svg { width: 20px; height: 20px; }
+
+body.sidebar-full-hidden .sidebar-show-btn { display: flex; }
+
 /* Sidebar Header */
 .sidebar-header {
   display: flex;
@@ -735,6 +767,7 @@ body.sidebar-collapsed .main-content { margin-left: var(--sidebar-collapsed); }
 .activity-dot--amber  { background: var(--amber); box-shadow: 0 0 0 3px var(--amber-light); }
 .activity-dot--purple { background: var(--purple); box-shadow: 0 0 0 3px var(--purple-light); }
 .activity-dot--red    { background: var(--red); box-shadow: 0 0 0 3px var(--red-light); }
+.activity-dot--teal   { background: var(--teal); box-shadow: 0 0 0 3px var(--teal-light); }
 
 .activity-content { flex: 1; }
 .activity-text {
@@ -1462,11 +1495,16 @@ body.sidebar-collapsed .main-content { margin-left: var(--sidebar-collapsed); }
    ============================================================ */
 .softphone-layout {
   display: grid;
-  grid-template-columns: 380px 1fr;
-  gap: 16px;
+  grid-template-columns: 340px 1fr;
+  gap: 18px;
   align-items: start;
-  height: calc(100vh - var(--topbar-height) - 140px);
-  max-height: 620px;
+}
+
+.softphone-main-col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
 }
 
 .softphone-frame-card {
@@ -1477,8 +1515,138 @@ body.sidebar-collapsed .main-content { margin-left: var(--sidebar-collapsed); }
   box-shadow: var(--shadow-md);
   display: flex;
   flex-direction: column;
-  height: 100%;
+  min-height: 560px;
 }
+
+/* ── Active call info strip ── */
+.active-call-strip {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 14px 22px;
+  box-shadow: var(--shadow-sm);
+  flex-wrap: wrap;
+}
+
+.call-strip-icon {
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  color: var(--text-muted);
+  flex-shrink: 0;
+  transition: background var(--transition), color var(--transition);
+}
+.call-strip-icon svg { width: 20px; height: 20px; }
+.call-strip-icon.active {
+  background: var(--green-light);
+  color: var(--green);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+.call-strip-field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.call-strip-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.call-strip-value {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.call-strip-value.mono { font-family: var(--font-mono); }
+
+.softphone-tabs-row {
+  padding: 10px 18px 0;
+  background: var(--bg-card);
+  flex-shrink: 0;
+}
+
+.cust-record-panel {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 22px 24px;
+}
+
+.cust-record-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 60px 10px;
+  color: var(--text-muted);
+  text-align: center;
+}
+.cust-record-empty p { font-size: 13px; max-width: 300px; line-height: 1.5; }
+
+.cust-record-identity {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--border);
+}
+.cust-record-name { font-size: 17px; font-weight: 700; color: var(--text-primary); }
+.cust-record-company { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+
+.cust-record-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.cust-record-field {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.cust-record-field-label {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.cust-record-field-value {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-primary);
+  word-break: break-word;
+}
+
+/* ── Connection chip (replaces the bare dot next to the card title) ── */
+.sp-connection-chip {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: var(--bg);
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.sp-connection-chip .softphone-status-dot { box-shadow: 0 0 0 2px rgba(0,41,82,0.1); }
+.sp-connection-chip .softphone-status-dot.connected { box-shadow: 0 0 0 2px rgba(74,222,128,0.3); }
 
 .softphone-frame-header {
   display: flex;
@@ -1529,11 +1697,7 @@ body.sidebar-collapsed .main-content { margin-left: var(--sidebar-collapsed); }
 .softphone-info-panel {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  height: 100%;
-  overflow-y: auto;
-  padding-right: 4px;
-  scrollbar-width: thin;
+  gap: 16px;
 }
 
 .genesys-info-card {
@@ -1674,11 +1838,13 @@ body.sidebar-collapsed .main-content { margin-left: var(--sidebar-collapsed); }
 @media (max-width: 1100px) {
   .softphone-layout { grid-template-columns: 1fr; }
   .genesys-config-grid { grid-template-columns: 1fr; }
+  .softphone-frame-card { min-height: 460px; }
 }
 
 @media (max-width: 768px) {
-  #softphone { min-height: 400px; }
+  #softphone { min-height: 340px; }
   .call-controls { grid-template-columns: repeat(4, 1fr); }
+  .active-call-strip { gap: 16px; padding: 12px 16px; }
 }
 
 
@@ -1808,6 +1974,13 @@ body.sidebar-collapsed .main-content { margin-left: var(--sidebar-collapsed); }
       </button>
     </div>
   </aside>
+
+  <!-- Floating button to bring the sidebar back once it's hidden -->
+  <button class="sidebar-show-btn" id="sidebarShowBtn" aria-label="Show sidebar" title="Show sidebar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+    </svg>
+  </button>
 
   <!-- ===== MAIN CONTENT ===== -->
   <main class="main-content" id="mainContent">
@@ -2376,15 +2549,18 @@ body.sidebar-collapsed .main-content { margin-left: var(--sidebar-collapsed); }
           <div class="genesys-info-card">
             <div class="card-header">
               <h2 class="card-title">Genesys Cloud Softphone</h2>
-              <div id="spDot" class="softphone-status-dot"></div>
+              <span class="sp-connection-chip" id="spConnectionChip">
+                <span id="spDot" class="softphone-status-dot"></span>
+                <span id="spDotLabel">Connecting…</span>
+              </span>
             </div>
             <iframe
               id="softphone"
               allow="camera *; microphone *; autoplay *; clipboard-write *"
               allowfullscreen
-              src="https://apps.usw2.pure.cloud/crm/embeddableFramework.html?dedicatedLoginWindow=true"
+              src="https://apps.usw2.pure.cloud/crm/embeddableFramework.html?dedicatedLoginWindow=true&enableFrameworkClientId=true"
               title="Genesys Cloud Softphone"
-              style="width:100%;height:280px;border:none;border-radius:8px;display:block;background:#f8fafc;">
+              style="width:100%;height:340px;border:none;border-radius:8px;display:block;background:#f8fafc;">
             </iframe>
           </div>
 
@@ -2422,26 +2598,108 @@ body.sidebar-collapsed .main-content { margin-left: var(--sidebar-collapsed); }
 
         </div>
 
-        <!-- Right: Agent Script fills the entire column, top to bottom -->
-        <div class="softphone-frame-card" style="height:100%;min-height:0;">
-          <div class="softphone-frame-header">
-            <div class="softphone-frame-title">
+        <!-- Right column: live call-info strip, then Agent Script filling the rest -->
+        <div class="softphone-main-col">
+
+          <div class="active-call-strip" id="activeCallStrip">
+            <div class="call-strip-icon" id="callStripIcon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                <polyline points="14 2 14 8 20 8"/>
-                <line x1="9" y1="13" x2="15" y2="13"/>
-                <line x1="9" y1="17" x2="15" y2="17"/>
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.59 3.47 2 2 0 0 1 3.56 1.25h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.78a16 16 0 0 0 6.29 6.29l.87-.87a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
               </svg>
-              Agent Script
+            </div>
+            <div class="call-strip-field">
+              <span class="call-strip-label">Status</span>
+              <span class="call-strip-value" id="callStripStatus">No active call</span>
+            </div>
+            <div class="call-strip-field">
+              <span class="call-strip-label">Number</span>
+              <span class="call-strip-value" id="callStripNumber">—</span>
+            </div>
+            <div class="call-strip-field">
+              <span class="call-strip-label">Direction</span>
+              <span class="call-strip-value" id="callStripDirection">—</span>
+            </div>
+            <div class="call-strip-field">
+              <span class="call-strip-label">Duration</span>
+              <span class="call-strip-value mono" id="callStripDuration">00:00</span>
             </div>
           </div>
-          <iframe
-            id="interactionWindow"
-            allow="camera *; microphone *; autoplay *; clipboard-write *"
-            src="https://apps.usw2.pure.cloud/crm/interaction.html"
-            title="Genesys Cloud Interaction Window"
-            style="width:100%;height:100%;flex:1;min-height:0;border:none;display:block;background:#f8fafc;overflow-y:auto;">
-          </iframe>
+
+          <div class="softphone-frame-card">
+            <div class="softphone-frame-header">
+              <div class="softphone-frame-title" id="softphoneFrameTitle">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                  <line x1="9" y1="13" x2="15" y2="13"/>
+                  <line x1="9" y1="17" x2="15" y2="17"/>
+                </svg>
+                Agent Script
+              </div>
+            </div>
+
+            <div class="softphone-tabs-row">
+              <div class="chart-tabs" id="softphoneTabs">
+                <button type="button" class="chart-tab active" data-tab="script" onclick="window.switchSoftphoneTab('script')">Agent Script</button>
+                <button type="button" class="chart-tab" data-tab="record" onclick="window.switchSoftphoneTab('record')">Customer Record</button>
+              </div>
+            </div>
+
+            <!-- Agent Script panel -->
+            <iframe
+              id="interactionWindow"
+              allow="camera *; microphone *; autoplay *; clipboard-write *"
+              src="https://apps.usw2.pure.cloud/crm/interaction.html"
+              title="Genesys Cloud Interaction Window"
+              style="width:100%;height:100%;flex:1;min-height:0;border:none;display:block;background:#f8fafc;overflow-y:auto;">
+            </iframe>
+
+            <!-- Customer Record panel — populated by screenPop in framework.js -->
+            <div id="recordPanel" class="cust-record-panel" style="display:none;">
+              <div id="recordEmpty" class="cust-record-empty">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="30" height="30">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.59 3.47 2 2 0 0 1 3.56 1.25h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.78a16 16 0 0 0 6.29 6.29l.87-.87a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" opacity="0.4"/>
+                </svg>
+                <p>No screen pop yet. When an inbound call alerts and matches a client by number, their record appears here automatically.</p>
+              </div>
+              <div id="recordBody" style="display:none;">
+                <div class="cust-record-identity">
+                  <div class="client-avatar-sm" id="recAvatar" style="width:48px;height:48px;font-size:16px;">--</div>
+                  <div>
+                    <div class="cust-record-name" id="recName">—</div>
+                    <div class="cust-record-company" id="recCompany">—</div>
+                  </div>
+                  <span class="status-badge" id="recStatus" style="margin-left:auto"></span>
+                </div>
+                <div class="cust-record-fields">
+                  <div class="cust-record-field">
+                    <span class="cust-record-field-label">Phone</span>
+                    <span class="cust-record-field-value" id="recPhone">—</span>
+                  </div>
+                  <div class="cust-record-field">
+                    <span class="cust-record-field-label">Email</span>
+                    <span class="cust-record-field-value" id="recEmail">—</span>
+                  </div>
+                  <div class="cust-record-field">
+                    <span class="cust-record-field-label">Sector</span>
+                    <span class="cust-record-field-value" id="recSector">—</span>
+                  </div>
+                  <div class="cust-record-field">
+                    <span class="cust-record-field-label">Client Since</span>
+                    <span class="cust-record-field-value" id="recJoined">—</span>
+                  </div>
+                </div>
+                <button type="button" class="text-btn" id="recViewBtn" style="margin-top:16px;padding-left:0">View full record in Clients table →</button>
+              </div>
+              <div id="recordUnmatched" style="display:none;" class="cust-record-empty">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="30" height="30">
+                  <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+                <p id="recordUnmatchedText">No matching client record found.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
 
       </div>
@@ -2524,6 +2782,73 @@ body.sidebar-collapsed .main-content { margin-left: var(--sidebar-collapsed); }
           <button type="button" class="btn btn-ghost" id="cancelModal">Cancel</button>
           <button type="submit" class="btn btn-primary" id="submitClient">
             <span class="btn-text">Save Client</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== DISPOSITION MODAL ===== -->
+  <div class="modal-overlay" id="dispositionModalOverlay" role="dialog" aria-modal="true" aria-labelledby="dispositionModalTitle">
+    <div class="modal" id="dispositionModal" style="max-width:520px;">
+      <div class="modal-header">
+        <h2 class="modal-title" id="dispositionModalTitle">Log Call Disposition</h2>
+        <button class="modal-close" id="dispositionModalClose" aria-label="Close modal">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <form class="modal-form" id="dispositionForm" novalidate>
+
+        <div class="form-group">
+          <label>Caller</label>
+          <div id="dispCallerLine" style="font-size:14px;font-weight:600;color:var(--text-primary);padding:8px 0;">—</div>
+        </div>
+
+        <!-- Shown when the Genesys wrap-up code was retrieved automatically -->
+        <div id="dispAutoSection">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Genesys Wrap-up Code <span style="color:var(--green);font-weight:600;font-size:11px;">AUTO</span></label>
+              <div id="dispGenesysCode" style="padding:10px 14px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-md);font-size:14px;font-weight:600;">—</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Genesys Notes <span style="color:var(--green);font-weight:600;font-size:11px;">AUTO</span></label>
+            <div id="dispGenesysNotes" style="padding:10px 14px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-md);font-size:13px;color:var(--text-secondary);min-height:20px;">—</div>
+          </div>
+        </div>
+
+        <!-- Shown when the poll timed out and the agent needs to pick manually -->
+        <div id="dispManualSection" style="display:none;">
+          <p style="font-size:12.5px;color:var(--text-muted);margin-bottom:10px;">
+            Couldn't retrieve a Genesys wrap-up code automatically (the agent may not have completed Wrap-up yet). Please select one manually:
+          </p>
+          <div class="form-group">
+            <label for="dispManualCode">Disposition <span class="required">*</span></label>
+            <select id="dispManualCode">
+              <option value="">Select a disposition</option>
+              <option>Resolved</option>
+              <option>Follow-up Required</option>
+              <option>Escalated</option>
+              <option>Information Provided</option>
+              <option>No Resolution</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="dispCrmNotes">CRM Notes</label>
+          <textarea id="dispCrmNotes" rows="3" placeholder="Add any notes about this call for the account record…"></textarea>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-ghost" id="dispositionCancel">Cancel</button>
+          <button type="submit" class="btn btn-primary">
+            <span class="btn-text">Save Disposition</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
           </button>
         </div>
@@ -2647,9 +2972,17 @@ function isMobile() { return window.innerWidth < 769; }
 
 sidebarToggle.addEventListener('click', () => {
   if (isMobile()) return;
-  sidebar.classList.toggle('collapsed');
-  document.body.classList.toggle('sidebar-collapsed');
+  sidebar.classList.add('full-hidden');
+  document.body.classList.add('sidebar-full-hidden');
 });
+
+const sidebarShowBtn = document.getElementById('sidebarShowBtn');
+if (sidebarShowBtn) {
+  sidebarShowBtn.addEventListener('click', () => {
+    sidebar.classList.remove('full-hidden');
+    document.body.classList.remove('sidebar-full-hidden');
+  });
+}
 
 mobileMenuBtn.addEventListener('click', () => {
   document.body.classList.toggle('mobile-open');
@@ -3132,6 +3465,105 @@ function showToast(message, duration = 3200) {
 }
 
 /* ─────────────────────────────────────────────
+   CALL DISPOSITION
+   Opened by 'disposition-ready' (Genesys wrap-up code retrieved
+   automatically) or 'disposition-timeout' (agent picks manually)
+   messages from framework.js, handled in the Genesys init block
+   below. Logged entries land in the Recent Activity feed.
+───────────────────────────────────────────── */
+let dispositions = [];
+
+function openDispositionModal(opts) {
+  const overlay = document.getElementById('dispositionModalOverlay');
+  if (!overlay) return;
+
+  const ctx = (typeof window.getLastCallContext === 'function') ? window.getLastCallContext() : {};
+  const callerLine = document.getElementById('dispCallerLine');
+  if (callerLine) {
+    callerLine.textContent = ctx.match
+      ? `${ctx.match.firstName} ${ctx.match.lastName} — ${ctx.match.company}`
+      : `Unknown caller${ctx.number ? ' (' + ctx.number + ')' : ''}`;
+  }
+
+  const autoSection   = document.getElementById('dispAutoSection');
+  const manualSection = document.getElementById('dispManualSection');
+
+  if (opts.auto) {
+    autoSection.style.display   = 'block';
+    manualSection.style.display = 'none';
+    document.getElementById('dispGenesysCode').textContent  = opts.code || '—';
+    document.getElementById('dispGenesysNotes').textContent = opts.notes || '(no notes entered)';
+  } else {
+    autoSection.style.display   = 'none';
+    manualSection.style.display = 'block';
+    document.getElementById('dispManualCode').value = '';
+  }
+
+  document.getElementById('dispCrmNotes').value = '';
+  overlay.dataset.autoMode    = opts.auto ? 'true' : 'false';
+  overlay.dataset.genesysCode = opts.auto ? (opts.code || '') : '';
+
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDispositionModal() {
+  const overlay = document.getElementById('dispositionModalOverlay');
+  if (!overlay) return;
+  overlay.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('dispositionModalClose').addEventListener('click', closeDispositionModal);
+document.getElementById('dispositionCancel').addEventListener('click', closeDispositionModal);
+document.getElementById('dispositionModalOverlay').addEventListener('click', (e) => {
+  if (e.target === e.currentTarget) closeDispositionModal();
+});
+
+document.getElementById('dispositionForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const overlay = document.getElementById('dispositionModalOverlay');
+  const auto = overlay.dataset.autoMode === 'true';
+  const code = auto ? overlay.dataset.genesysCode : document.getElementById('dispManualCode').value;
+
+  if (!auto && !code) {
+    showToast('Please select a disposition before saving.');
+    return;
+  }
+
+  const ctx = (typeof window.getLastCallContext === 'function') ? window.getLastCallContext() : {};
+  const entry = {
+    id:         dispositions.length + 1,
+    clientId:   ctx.match ? ctx.match.id : null,
+    clientName: ctx.match ? `${ctx.match.firstName} ${ctx.match.lastName}` : 'Unknown caller',
+    company:    ctx.match ? ctx.match.company : (ctx.number || ''),
+    source:     auto ? 'genesys' : 'manual',
+    code:       code || 'Unspecified',
+    crmNotes:   document.getElementById('dispCrmNotes').value.trim(),
+    loggedAt:   new Date().toISOString()
+  };
+  dispositions.unshift(entry);
+
+  logActivityItem(entry);
+  closeDispositionModal();
+  showToast(`Disposition logged: ${entry.code}`);
+});
+
+function logActivityItem(entry) {
+  const list = document.querySelector('#section-dashboard .activity-list');
+  if (!list) return;
+  const li = document.createElement('li');
+  li.className = 'activity-item';
+  li.innerHTML = `
+    <div class="activity-dot activity-dot--teal"></div>
+    <div class="activity-content">
+      <p class="activity-text"><strong>${escapeHtml(entry.clientName)}</strong> — call disposition: ${escapeHtml(entry.code)}</p>
+      <span class="activity-time">Just now</span>
+    </div>`;
+  list.prepend(li);
+}
+
+/* ─────────────────────────────────────────────
    PIPELINE BAR ANIMATION (intersection observer)
 ───────────────────────────────────────────── */
 function animatePipelineBars() {
@@ -3258,6 +3690,12 @@ function animateCounters() {
     bannerDismissed = false; // a real state change un-hides the banner
     renderBanner(msg);
     if (spDot) spDot.className = 'softphone-status-dot ' + (state === 'connected' ? 'connected' : '');
+    var dotLabel = document.getElementById('spDotLabel');
+    if (dotLabel) {
+      dotLabel.textContent = state === 'connected' ? 'Connected'
+        : state === 'error' ? 'Needs login'
+        : 'Connecting…';
+    }
   }
 
   function renderBanner(msg) {
@@ -3296,10 +3734,184 @@ function animateCounters() {
       setStatus('connected', 'Login successful — Genesys Cloud ready to take calls');
     } else if (type === 'call-started' || type === 'call.start') {
       showToast('Incoming/outgoing call started');
+      setCallStripActive(pendingCallContext.direction || 'Call', pendingCallContext.number);
     } else if (type === 'call-ended' || type === 'call.end') {
       showToast('Call ended');
+      setCallStripIdle();
+      pendingCallContext = { direction: null, number: null };
     } else if (type === 'error' || type === 'auth-error') {
       setStatus('error', 'Authentication required — please sign in to Genesys Cloud');
+    } else if (type === 'screenPop') {
+      handleScreenPop(data.searchString, data.attributes);
+    }
+  });
+
+  // ── Screen pop: match the caller's number to a CRM record and
+  //    jump straight to it — no manual search needed. ──
+  function normalizePhone(p) {
+    return (p || '').replace(/[^\d]/g, '').replace(/^0+/, '');
+  }
+
+  function handleScreenPop(searchString, attributes) {
+    var incoming = normalizePhone(searchString);
+
+    var match = incoming ? (clientData || []).find(function (c) {
+      return normalizePhone(c.phone).endsWith(incoming) ||
+             incoming.endsWith(normalizePhone(c.phone));
+    }) : null;
+
+    lastScreenPopMatch = match || null;
+    lastScreenPopNumber = searchString || null;
+    pendingCallContext = { direction: 'Inbound', number: searchString || null };
+
+    // Jump to the Softphone tab and the Customer Record sub-tab so the
+    // agent sees the pop immediately, wherever they were.
+    if (typeof window.switchSection === 'function') window.switchSection('softphone');
+    if (typeof window.switchSoftphoneTab === 'function') window.switchSoftphoneTab('record');
+
+    if (!match) {
+      showToast('Incoming call from ' + (searchString || 'unknown number') + ' — no matching client found');
+      renderUnmatchedRecord(searchString);
+      return;
+    }
+
+    showToast('Screen pop: ' + match.firstName + ' ' + match.lastName + ' (' + match.company + ') is calling');
+    renderCustomerRecord(match);
+  }
+
+  function renderCustomerRecord(c) {
+    document.getElementById('recordEmpty').style.display = 'none';
+    document.getElementById('recordUnmatched').style.display = 'none';
+    var body = document.getElementById('recordBody');
+    body.style.display = 'block';
+
+    var avatar = document.getElementById('recAvatar');
+    avatar.textContent = ((c.firstName || '')[0] || '') + ((c.lastName || '')[0] || '');
+    avatar.setAttribute('style', avatar.getAttribute('style').split(';').filter(function(s){return s.indexOf('background')===-1 && s.indexOf('color')===-1;}).join(';') + ';' + getAvatarStyle(c.company));
+
+    setStripField('recName', c.firstName + ' ' + c.lastName);
+    setStripField('recCompany', c.company);
+    setStripField('recPhone', c.phone);
+    setStripField('recEmail', c.email);
+    setStripField('recSector', c.sector);
+    setStripField('recJoined', formatDate(c.joined));
+
+    var statusEl = document.getElementById('recStatus');
+    statusEl.className = 'status-badge ' + c.status;
+    statusEl.textContent = c.status.charAt(0).toUpperCase() + c.status.slice(1);
+    statusEl.style.marginLeft = 'auto';
+
+    document.getElementById('recViewBtn').onclick = function () {
+      window.switchSection('clients');
+      setTimeout(function () {
+        var row = document.querySelector('tr[data-client-id="' + c.id + '"]');
+        if (row) {
+          row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          highlightNewRow(c.id);
+        }
+      }, 60);
+    };
+  }
+
+  function renderUnmatchedRecord(searchString) {
+    document.getElementById('recordEmpty').style.display = 'none';
+    document.getElementById('recordBody').style.display = 'none';
+    document.getElementById('recordUnmatched').style.display = 'flex';
+    document.getElementById('recordUnmatchedText').textContent =
+      'Incoming call from ' + (searchString || 'an unknown number') + ' — no matching client record found.';
+  }
+
+  function resetCustomerRecord() {
+    document.getElementById('recordBody').style.display = 'none';
+    document.getElementById('recordUnmatched').style.display = 'none';
+    document.getElementById('recordEmpty').style.display = 'flex';
+  }
+
+  // Remembers the client matched by the most recent screen pop (or null
+  // if unmatched) so a disposition can be tied back to the right record.
+  var lastScreenPopMatch  = null;
+  var lastScreenPopNumber = null;
+
+  window.getLastCallContext = function () {
+    return { match: lastScreenPopMatch, number: lastScreenPopNumber };
+  };
+
+  // ── Active-call info strip — driven entirely by signals we already
+  //    receive: the number from dialNumber()/screenPop, and the
+  //    connect/disconnect timing from call-started/call-ended. ──
+  var pendingCallContext = { direction: null, number: null };
+  var callStripTimer      = null;
+  var callStartTimestamp  = null;
+
+  function formatDuration(ms) {
+    var totalSec = Math.max(0, Math.floor(ms / 1000));
+    var m = Math.floor(totalSec / 60);
+    var s = totalSec % 60;
+    return (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+  }
+
+  function setStripField(id, value) {
+    var el = document.getElementById(id);
+    if (el) el.textContent = value;
+  }
+
+  function setCallStripActive(direction, number) {
+    callStartTimestamp = Date.now();
+    var icon = document.getElementById('callStripIcon');
+    if (icon) icon.classList.add('active');
+    setStripField('callStripStatus', 'Connected');
+    setStripField('callStripNumber', number || '—');
+    setStripField('callStripDirection', direction || '—');
+    setStripField('callStripDuration', '00:00');
+
+    clearInterval(callStripTimer);
+    callStripTimer = setInterval(function () {
+      setStripField('callStripDuration', formatDuration(Date.now() - callStartTimestamp));
+    }, 1000);
+  }
+
+  function setCallStripIdle() {
+    clearInterval(callStripTimer);
+    callStripTimer = null;
+    var icon = document.getElementById('callStripIcon');
+    if (icon) icon.classList.remove('active');
+    setStripField('callStripStatus', 'No active call');
+    setStripField('callStripNumber', '—');
+    setStripField('callStripDirection', '—');
+    setStripField('callStripDuration', '00:00');
+  }
+
+  // ── Agent Script / Customer Record tab toggle ──
+  window.switchSoftphoneTab = function (tab) {
+    var scriptIframe = document.getElementById('interactionWindow');
+    var recordPanel  = document.getElementById('recordPanel');
+
+    document.querySelectorAll('#softphoneTabs .chart-tab').forEach(function (btn) {
+      btn.classList.toggle('active', btn.dataset.tab === tab);
+    });
+
+    if (tab === 'record') {
+      if (scriptIframe) scriptIframe.style.display = 'none';
+      if (recordPanel)  recordPanel.style.display = 'block';
+    } else {
+      if (scriptIframe) scriptIframe.style.display = 'block';
+      if (recordPanel)  recordPanel.style.display = 'none';
+    }
+  };
+
+  window.addEventListener('message', function(event) {
+    if (!event.origin || !event.origin.includes('pure.cloud')) return;
+    var data = event.data || {};
+    var type = typeof data === 'string' ? data : (data.type || data.action || '');
+
+    if (type === 'disposition-ready') {
+      openDispositionModal({
+        auto: true,
+        code: data.wrapupName || data.wrapupCode || '—',
+        notes: data.wrapupNotes || ''
+      });
+    } else if (type === 'disposition-timeout') {
+      openDispositionModal({ auto: false });
     }
   });
 
@@ -3323,6 +3935,29 @@ function animateCounters() {
     // Jump to the Softphone tab so the user can see the call happen
     if (typeof window.switchSection === 'function') {
       window.switchSection('softphone');
+    }
+
+    pendingCallContext = { direction: 'Outbound', number: number };
+
+    // Outbound never triggers Genesys's screenPop (that hook is
+    // inbound-only) — but we already know who we're calling, so look
+    // them up the same way and populate the Customer Record tab here.
+    var outboundIncoming = normalizePhone(number);
+    var outboundMatch = outboundIncoming ? (clientData || []).find(function (c) {
+      return normalizePhone(c.phone).endsWith(outboundIncoming) ||
+             outboundIncoming.endsWith(normalizePhone(c.phone));
+    }) : null;
+
+    lastScreenPopMatch = outboundMatch || null;
+    lastScreenPopNumber = number;
+
+    if (typeof window.switchSoftphoneTab === 'function') {
+      window.switchSoftphoneTab('record');
+    }
+    if (outboundMatch) {
+      renderCustomerRecord(outboundMatch);
+    } else {
+      renderUnmatchedRecord(number);
     }
 
     iframe.contentWindow.postMessage(
